@@ -3,7 +3,7 @@ let id_page = '668664313334178';
 let link_avatar = `https://graph.facebook.com/${id_page}/picture?type=large`;
 let link_api = `https://gxcl.info/api.php`;
 let link_page = `https://facebook.com/gaixinhchonloc`;
-let link_photo, width, height, div;
+let link_photo, width, height, div, sponsor, div1;
 let ads = false, shared_post = false, store = false, contains_keywords = false, contains_name = false,
     array_keywords = [], array_name = [];
 let class_comment_name = "nc684nl6";
@@ -68,13 +68,30 @@ chrome.storage.sync.get(["opts","keywords","name"], ({opts, keywords,name}) => {
             let i;
             if (ads) {
                 // bài quảng cáo
-                div = $('[aria-label="Sponsored"]').closest(`div[data-pagelet^="FeedUnit"]`).first();
-                if (div.length === 0) {
-                    div = $('[aria-label="Được tài trợ"]').closest(`div[data-pagelet^="FeedUnit"]`).first();
-                }
-                if (div.length !== 0) {
-                    executeDiv(div, chrome.i18n.getMessage('ads'));
-                }
+                sponsor = $('div[role="feed"] a[role="link"]>span>b>b');
+                //console.log(sponsor);
+                Object.entries(sponsor).forEach(entry => {
+                    //const [key, value] = entry;
+                    let sp = entry[1];
+                    //console.log(sp);
+                    if( sp.innerText === 'Được tài trợ'){
+                        div = sponsor.closest(`div[data-pagelet^="FeedUnit_{n}"]`).first();
+                        div1 = sponsor.closest(`div[data-pagelet^="FeedUnit_1"]`).first();
+                        //console.log(div);
+                        if (div.length === 0) {
+                            div = sponsor.closest(`div[data-pagelet^="FeedUnit_{n}"]`).first();
+                        }
+                        if (div.length !== 0) {
+                            executeDiv(div, chrome.i18n.getMessage('ads'));
+                        }
+                        if(div.length === 0){
+                            div1 = sponsor.closest(`div[data-pagelet^="FeedUnit_1"]`).first();
+                        }
+                        if (div1.length !== 0) {
+                            executeDiv(div1, chrome.i18n.getMessage('ads'));
+                        }
+                    }
+                });
             }
             if (shared_post) {
                 // bài chia sẻ
