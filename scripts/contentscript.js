@@ -119,6 +119,7 @@ chrome.storage.sync.get(["opts","keywords","name"], ({opts, keywords,name}) => {
                     }
                 }
             }
+            removeSidebarAds();
         });
     });
 })(chrome);
@@ -289,3 +290,17 @@ function replaceWithImage(this_div_parent) {
         `);
     });
 };
+function removeSidebarAds(){
+    let sidebar_ad = $('a[aria-label="Liên kết của nhà quảng cáo"]');
+    let sponsor_sidebar_ad = document.querySelector('div[data-pagelet="RightRail"]');
+    if(sidebar_ad.length){
+        sidebar_ad.remove();
+    }
+    if(sponsor_sidebar_ad.childNodes.length){
+        let first_node = sponsor_sidebar_ad.childNodes[1];
+        let sub_fnode = first_node.childNodes[0];
+        if(sub_fnode.innerText == 'Được tài trợ'){
+            sponsor_sidebar_ad.childNodes[1].childNodes[0].innerText = '';
+        }
+    }
+}
